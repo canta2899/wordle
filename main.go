@@ -10,26 +10,25 @@ import (
 
 func main() {
     reader := bufio.NewReader(os.Stdin)
+    fmt.Printf("Welcome to Wordle, you can start guessing!\n\n")
 
     word := strings.ToUpper(GetWord())
-    fmt.Println("word is", word)
-
     attempts := []string{}
     attemptsCount := 0
 
     for attemptsCount < 5 {
-
         chosenWord := getChosenWord(reader)
-
+        fmt.Printf("\n")
         res := compare(word, chosenWord, &attempts)
         printAttempts(attempts)
-
+        fmt.Printf("\n\n")
         if res { break }
         attemptsCount++
     }
 
     fmt.Printf("\n\nThe word was %v\n\n", word)
 }
+
 
 func printAttempts(attempts []string) {
     for _, word := range attempts {
@@ -64,7 +63,7 @@ func compare(trueWord string, chosenWord string, attempts *[]string) bool {
 
 func getCharAt(word string, index int) string {
     if index < 0 || index > len(word) {
-        panic("Error getCharAt for word")
+        panic("Error getCharAt") 
     }
 
     return string(word[index])
@@ -76,7 +75,6 @@ func in(letter string, word string) bool{
             return true
         }
     }
-
     return false
 }
 
@@ -96,3 +94,4 @@ func getChosenWord(reader *bufio.Reader) string {
     // removing trailing new line
     return strings.ToUpper(chosenWord[:5])
 }
+

@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+func GetWord() string {
+    rand.Seed(time.Now().UnixNano())
+    idx := rand.Intn(len(words))
+    return words[idx]
+}
+
 var words = [...]string{
     "Abuse",
     "Adult",
@@ -671,8 +677,3 @@ var words = [...]string{
     "Zowie",
 }
 
-func GetWord() string {
-    rand.Seed(time.Now().UnixNano())
-    idx := rand.Intn(len(words))
-    return words[idx]
-}
