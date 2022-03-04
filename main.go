@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-    reader := bufio.NewReader(os.Stdin)
+    reader := bufio.NewScanner(os.Stdin)
     fmt.Printf("Welcome to Wordle, you can start guessing!\n\n")
 
     word := strings.ToUpper(GetWord())
@@ -78,20 +78,24 @@ func in(letter string, word string) bool{
     return false
 }
 
-func getChosenWord(reader *bufio.Reader) string {
+func getChosenWord(scanner *bufio.Scanner) string {
     var chosenWord string
 
     for {
-        chosenWord, _ = reader.ReadString('\n')
+        fmt.Printf("Guess your word: ")
+        scanner.Scan()
+        chosenWord = scanner.Text()
 
-        if len(chosenWord) != 6 {
+        if len(chosenWord) != 5 {
             fmt.Println("Word does not have five characters")
-        } else {
+        } else if !IsWord(chosenWord) {
+            fmt.Println("Not a word")
+        }else {
             break
         }
     }
 
     // removing trailing new line
-    return strings.ToUpper(chosenWord[:5])
+    return chosenWord
 }
 
