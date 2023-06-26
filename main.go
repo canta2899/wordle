@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-    "strings"
+  "strings"
 	"github.com/gookit/color"
 )
 
@@ -49,7 +49,7 @@ func compare(trueWord string, chosenWord string, attempts *[]string) bool {
             word += color.BgBlack.Sprintf(" %v ", getCharAt(chosenWord, i))
         }
 
-        word += color.FgGray.Sprintf("|")
+        word += color.FgGray.Sprintf(" ")
     }
 
     *attempts = append(*attempts, word)
