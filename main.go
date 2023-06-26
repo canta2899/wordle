@@ -3,99 +3,97 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"os"
-  "strings"
 	"github.com/gookit/color"
+	"os"
+	"strings"
 )
 
+var green = color.S256(233, 34)
+var yellow = color.S256(233, 220)
+var gray = color.S256(255, 241)
+
 func main() {
-    reader := bufio.NewScanner(os.Stdin)
-    fmt.Printf("Welcome to Wordle, you can start guessing!\n\n")
+	reader := bufio.NewScanner(os.Stdin)
+	fmt.Printf("Welcome to Wordle, you can start guessing!\n\n")
 
-    word := strings.ToUpper(GetWord())
-    attempts := []string{}
-    attemptsCount := 0
+	word := strings.ToUpper(GetWord())
+	attempts := []string{}
+	attemptsCount := 0
 
-    for attemptsCount < 5 {
-        chosenWord := getChosenWord(reader)
-        fmt.Printf("\n")
-        res := compare(word, chosenWord, &attempts)
-        printAttempts(attempts)
-        fmt.Printf("\n\n")
-        if res { break }
-        attemptsCount++
-    }
+	for attemptsCount < 5 {
+		chosenWord := getChosenWord(reader)
+		fmt.Printf("\n")
+		match := compare(word, chosenWord, &attempts)
+		printAttempts(attempts)
+		fmt.Printf("\n\n")
+		if match {
+			fmt.Println("Congrats!")
+			break
+		}
+		attemptsCount++
+	}
 
-    fmt.Printf("\n\nThe word was %v\n\n", word)
+	fmt.Printf("The word was %v\n\n", word)
 }
 
-
 func printAttempts(attempts []string) {
-    for _, word := range attempts {
-        fmt.Println(word)
-    }
+	for _, word := range attempts {
+		fmt.Println(word)
+	}
 }
 
 func compare(trueWord string, chosenWord string, attempts *[]string) bool {
 
-    word := " "
+	word := " "
 
-    for i := 0; i < 5; i++ {
-        if getCharAt(chosenWord, i) == getCharAt(trueWord, i) {
-            word += color.BgGreen.Sprintf(" %v ", getCharAt(chosenWord, i))
-        }else if in(string(getCharAt(chosenWord, i)), trueWord) && getCharAt(chosenWord, i) != getCharAt(trueWord, i) {
-            word += color.BgYellow.Sprintf(" %v ", getCharAt(chosenWord, i))
-        }else {
-            word += color.BgBlack.Sprintf(" %v ", getCharAt(chosenWord, i))
-        }
+	for i := 0; i < 5; i++ {
+		if getCharAt(chosenWord, i) == getCharAt(trueWord, i) {
+			word += green.Sprintf(" %v ", getCharAt(chosenWord, i))
+		} else if in(string(getCharAt(chosenWord, i)), trueWord) && getCharAt(chosenWord, i) != getCharAt(trueWord, i) {
+			word += yellow.Sprintf(" %v ", getCharAt(chosenWord, i))
+		} else {
+			word += gray.Sprintf(" %v ", getCharAt(chosenWord, i))
+		}
 
-        word += color.FgGray.Sprintf(" ")
-    }
+		word += fmt.Sprintf(" ")
+	}
 
-    *attempts = append(*attempts, word)
+	*attempts = append(*attempts, word)
 
-    if chosenWord == trueWord {
-        return true
-    }
-
-    return false
+	return chosenWord == trueWord
 }
 
 func getCharAt(word string, index int) string {
-    if index < 0 || index > len(word) {
-        panic("Error getCharAt") 
-    }
+	if index < 0 || index > len(word) {
+		panic("unable to parse word")
+	}
 
-    return string(word[index])
+	return strings.ToUpper(string(word[index]))
 }
 
-func in(letter string, word string) bool{
-    for _, l := range word {
-        if letter == string(l) {
-            return true
-        }
-    }
-    return false
+func in(letter string, word string) bool {
+	for _, l := range word {
+		if letter == string(l) {
+			return true
+		}
+	}
+	return false
 }
 
 func getChosenWord(scanner *bufio.Scanner) string {
-    var chosenWord string
+	var chosenWord string
 
-    for {
-        fmt.Printf("Guess your word: ")
-        scanner.Scan()
-        chosenWord = scanner.Text()
+	for {
+		fmt.Printf("Guess your word: ")
+		scanner.Scan()
+		chosenWord = scanner.Text()
 
-        if len(chosenWord) != 5 {
-            fmt.Println("Word does not have five characters")
-        } else if !IsWord(chosenWord) {
-            fmt.Println("Not a word")
-        }else {
-            break
-        }
-    }
+		if len(chosenWord) != 5 {
+			fmt.Println("Word does not have five characters")
+		} else {
+			break
+		}
+	}
 
-    // removing trailing new line
-    return chosenWord
+	return chosenWord
 }
-
